@@ -8,18 +8,19 @@ Future<List<T>> _readQuery<T>(
 ) =>
     database.rawQuery(query).then((r) => r.map((e) => create(e)).toList());
 
-/// BEGIN GETOS
-Future<List<GetOSRow>> performGetOS(
-  Database database,
-) {
-  const query = '''
-SELECT * FROM ordemServico;
+/// BEGIN GETOSIDSELECIONADO
+Future<List<GetOSidSelecionadoRow>> performGetOSidSelecionado(
+  Database database, {
+  int? idOrdem,
+}) {
+  final query = '''
+SELECT * FROM ordemServico WHERE id = '$idOrdem';
 ''';
-  return _readQuery(database, query, (d) => GetOSRow(d));
+  return _readQuery(database, query, (d) => GetOSidSelecionadoRow(d));
 }
 
-class GetOSRow extends SqliteRow {
-  GetOSRow(super.data);
+class GetOSidSelecionadoRow extends SqliteRow {
+  GetOSidSelecionadoRow(super.data);
 
   int get id => data['id'] as int;
   String get titulo => data['titulo'] as String;
@@ -31,4 +32,4 @@ class GetOSRow extends SqliteRow {
   int get idTecnico => data['id_tecnico'] as int;
 }
 
-/// END GETOS
+/// END GETOSIDSELECIONADO

@@ -48,7 +48,7 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
             safeSetState(() {});
             _model.verificarInternet = true;
             safeSetState(() {});
-            await SQLiteManager.instance.getOS();
+            await SQLiteManager.instance.getOSidSelecionado();
           } else {
             _model.verificarInternet = false;
             safeSetState(() {});
@@ -148,8 +148,8 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                 },
               ),
             if (_model.verificarInternet == true)
-              FutureBuilder<List<GetOSRow>>(
-                future: SQLiteManager.instance.getOS(),
+              FutureBuilder<List<GetOSidSelecionadoRow>>(
+                future: SQLiteManager.instance.getOSidSelecionado(),
                 builder: (context, snapshot) {
                   // Customize what your widget looks like when it's loading.
                   if (!snapshot.hasData) {
@@ -165,21 +165,22 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                       ),
                     );
                   }
-                  final rowOnlineGetOSRowList = snapshot.data!;
+                  final rowOnlineGetOSidSelecionadoRowList = snapshot.data!;
 
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
-                      children: List.generate(rowOnlineGetOSRowList.length,
+                      children: List.generate(
+                          rowOnlineGetOSidSelecionadoRowList.length,
                           (rowOnlineIndex) {
-                        final rowOnlineGetOSRow =
-                            rowOnlineGetOSRowList[rowOnlineIndex];
+                        final rowOnlineGetOSidSelecionadoRow =
+                            rowOnlineGetOSidSelecionadoRowList[rowOnlineIndex];
                         return FFButtonWidget(
                           onPressed: () async {
                             safeSetState(() {});
                           },
-                          text: rowOnlineGetOSRow.titulo,
+                          text: rowOnlineGetOSidSelecionadoRow.titulo,
                           options: FFButtonOptions(
                             height: 40.0,
                             padding: const EdgeInsetsDirectional.fromSTEB(

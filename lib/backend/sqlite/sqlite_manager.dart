@@ -28,8 +28,12 @@ class SQLiteManager {
 
   /// START READ QUERY CALLS
 
-  Future<List<GetOSRow>> getOS() => performGetOS(
+  Future<List<GetOSidSelecionadoRow>> getOSidSelecionado({
+    int? idOrdem,
+  }) =>
+      performGetOSidSelecionado(
         _database,
+        idOrdem: idOrdem,
       );
 
   /// END READ QUERY CALLS
