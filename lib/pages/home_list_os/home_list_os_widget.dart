@@ -1058,6 +1058,11 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                             '',
                                                                             ParamType.String,
                                                                           ),
+                                                                          'idSelecionado':
+                                                                              serializeParam(
+                                                                            listViewALLOrdemServicoRow.id,
+                                                                            ParamType.int,
+                                                                          ),
                                                                         }.withoutNulls,
                                                                       );
                                                                     },

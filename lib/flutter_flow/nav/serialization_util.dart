@@ -253,6 +253,10 @@ dynamic deserializeParam<T>(
         switch (T) {
           case GetOSidSelecionadoRow:
             return GetOSidSelecionadoRow(data);
+          case GetImgidSelecionadoRow:
+            return GetImgidSelecionadoRow(data);
+          case GetAllOSRow:
+            return GetAllOSRow(data);
           default:
             return null;
         }

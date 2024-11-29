@@ -1036,6 +1036,11 @@ class _HomeListOsTesteWidgetState extends State<HomeListOsTesteWidget> {
                                                                             '',
                                                                             ParamType.String,
                                                                           ),
+                                                                          'idSelecionado':
+                                                                              serializeParam(
+                                                                            0,
+                                                                            ParamType.int,
+                                                                          ),
                                                                         }.withoutNulls,
                                                                       );
                                                                     },

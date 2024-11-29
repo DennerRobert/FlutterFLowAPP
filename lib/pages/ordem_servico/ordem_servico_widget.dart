@@ -15,6 +15,7 @@ class OrdemServicoWidget extends StatefulWidget {
     required this.cliente,
     required this.status,
     String? conteudo,
+    this.idSelecionado,
   }) : conteudo = conteudo ?? '0';
 
   final int? idordem;
@@ -23,6 +24,7 @@ class OrdemServicoWidget extends StatefulWidget {
   final String? cliente;
   final String? status;
   final String conteudo;
+  final int? idSelecionado;
 
   @override
   State<OrdemServicoWidget> createState() => _OrdemServicoWidgetState();
@@ -370,6 +372,10 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                         queryParameters: {
                           'ordemServicoId': serializeParam(
                             widget.idordem,
+                            ParamType.int,
+                          ),
+                          'idSelecionado': serializeParam(
+                            widget.idSelecionado,
                             ParamType.int,
                           ),
                         }.withoutNulls,

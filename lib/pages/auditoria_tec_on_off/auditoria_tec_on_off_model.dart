@@ -20,7 +20,7 @@ class AuditoriaTecOnOffModel extends FlutterFlowModel<AuditoriaTecOnOffWidget> {
 
   bool verificarInternet = true;
 
-  bool? clickBotao = false;
+  bool? clickBotao = true;
 
   ///  State fields for stateful widgets in this page.
 
@@ -28,10 +28,16 @@ class AuditoriaTecOnOffModel extends FlutterFlowModel<AuditoriaTecOnOffWidget> {
   ApiCallResponse? etapaOS;
   // Stores action output result for [Backend Call - API (getEntradaDados)] action in AuditoriaTecOnOff widget.
   ApiCallResponse? entradaDados;
-  bool isDataUploading = false;
-  FFUploadedFile uploadedLocalFile =
+  bool isDataUploading1 = false;
+  FFUploadedFile uploadedLocalFile1 =
       FFUploadedFile(bytes: Uint8List.fromList([]));
-  String uploadedFileUrl = '';
+
+  // Stores action output result for [Custom Action - converteBase64] action in Image widget.
+  String? uploadimage;
+  bool isDataUploading2 = false;
+  FFUploadedFile uploadedLocalFile2 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl2 = '';
 
   @override
   void initState(BuildContext context) {}

@@ -124,6 +124,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'conteudo',
               ParamType.String,
             ),
+            idSelecionado: params.getParam(
+              'idSelecionado',
+              ParamType.int,
+            ),
           ),
         ),
         FFRoute(
@@ -146,6 +150,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => AuditoriaTecOnOffWidget(
             ordemServicoId: params.getParam(
               'ordemServicoId',
+              ParamType.int,
+            ),
+            idSelecionado: params.getParam(
+              'idSelecionado',
               ParamType.int,
             ),
           ),
