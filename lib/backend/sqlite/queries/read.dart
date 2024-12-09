@@ -55,18 +55,18 @@ class GetImgidSelecionadoRow extends SqliteRow {
 
 /// END GETIMGIDSELECIONADO
 
-/// BEGIN GETALLOS
-Future<List<GetAllOSRow>> performGetAllOS(
+/// BEGIN GETALLOSS
+Future<List<GetAllOSsRow>> performGetAllOSs(
   Database database,
 ) {
   const query = '''
 SELECT * FROM ordemServico;
 ''';
-  return _readQuery(database, query, (d) => GetAllOSRow(d));
+  return _readQuery(database, query, (d) => GetAllOSsRow(d));
 }
 
-class GetAllOSRow extends SqliteRow {
-  GetAllOSRow(super.data);
+class GetAllOSsRow extends SqliteRow {
+  GetAllOSsRow(super.data);
 
   int get id => data['id'] as int;
   String get titulo => data['titulo'] as String;
@@ -78,4 +78,23 @@ class GetAllOSRow extends SqliteRow {
   int get idTecnico => data['id_tecnico'] as int;
 }
 
-/// END GETALLOS
+/// END GETALLOSS
+
+/// BEGIN GET ETAPAOS
+Future<List<GetEtapaOSRow>> performGetEtapaOS(
+  Database database,
+) {
+  const query = '''
+SELECT * FROM etapa_os;
+''';
+  return _readQuery(database, query, (d) => GetEtapaOSRow(d));
+}
+
+class GetEtapaOSRow extends SqliteRow {
+  GetEtapaOSRow(super.data);
+
+  int get id => data['id'] as int;
+  String get titulo => data['titulo'] as String;
+}
+
+/// END GET ETAPAOS

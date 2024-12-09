@@ -13,3 +13,18 @@ INSERT INTO imagens(imagem, fk_id_os) VALUES('$uploadimagem', '$idSelecionado');
 }
 
 /// END INSERTIMGIDSELECIONADO
+
+/// BEGIN UPDATE ALL
+Future performUpdateAll(
+  Database database, {
+  String? titulo,
+  String? endereco,
+}) {
+  final query = '''
+INSERT INTO ordemServico(titulo, endereco) VALUES(?, ?)
+  ON CONFLICT(id) DO UPDATE SET titulo = EXCLUDED.'$titulo', endereco = EXCLUDED.'$endereco';
+''';
+  return database.rawQuery(query);
+}
+
+/// END UPDATE ALL

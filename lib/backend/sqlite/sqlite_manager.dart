@@ -23,7 +23,7 @@ class SQLiteManager {
     }
     _database = await initializeDatabaseFromDbFile(
       'database',
-      'bmt4t_db.db',
+      'dbtestes.db',
     );
   }
 
@@ -45,7 +45,11 @@ class SQLiteManager {
         idSelecionado: idSelecionado,
       );
 
-  Future<List<GetAllOSRow>> getAllOS() => performGetAllOS(
+  Future<List<GetAllOSsRow>> getAllOSs() => performGetAllOSs(
+        _database,
+      );
+
+  Future<List<GetEtapaOSRow>> getEtapaOS() => performGetEtapaOS(
         _database,
       );
 
@@ -61,6 +65,16 @@ class SQLiteManager {
         _database,
         uploadimagem: uploadimagem,
         idSelecionado: idSelecionado,
+      );
+
+  Future updateAll({
+    String? titulo,
+    String? endereco,
+  }) =>
+      performUpdateAll(
+        _database,
+        titulo: titulo,
+        endereco: endereco,
       );
 
   /// END UPDATE QUERY CALLS

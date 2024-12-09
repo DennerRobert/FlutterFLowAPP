@@ -110,7 +110,7 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_imagemList', _imagemList);
   }
 
-  List<dynamic> _ListaEtapaOS = [];
+  List<dynamic> _ListaEtapaOS = [jsonDecode('{}')];
   List<dynamic> get ListaEtapaOS => _ListaEtapaOS;
   set ListaEtapaOS(List<dynamic> value) {
     _ListaEtapaOS = value;

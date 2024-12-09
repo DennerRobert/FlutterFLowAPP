@@ -1,4 +1,5 @@
 // Automatic FlutterFlow imports
+import '/backend/schema/structs/index.dart';
 import '/backend/schema/enums/enums.dart';
 import '/backend/supabase/supabase.dart';
 import '/backend/sqlite/sqlite_manager.dart';

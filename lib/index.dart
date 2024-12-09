@@ -9,3 +9,4 @@ export '/pages/auditoria_tec_on_off/auditoria_tec_on_off_widget.dart'
     show AuditoriaTecOnOffWidget;
 export '/pages/home_list_os_teste/home_list_os_teste_widget.dart'
     show HomeListOsTesteWidget;
+export '/teste/teste_widget.dart' show TesteWidget;

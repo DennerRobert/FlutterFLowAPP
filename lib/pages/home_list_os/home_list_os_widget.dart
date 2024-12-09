@@ -646,6 +646,11 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 .osConteudo,
                                                             ParamType.String,
                                                           ),
+                                                          'idSelecionado':
+                                                              serializeParam(
+                                                            0,
+                                                            ParamType.int,
+                                                          ),
                                                         }.withoutNulls,
                                                       );
                                                     },

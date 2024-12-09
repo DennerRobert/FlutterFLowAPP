@@ -51,8 +51,8 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
             safeSetState(() {});
             _model.verificarInternet = true;
             safeSetState(() {});
-            await SQLiteManager.instance.getOSidSelecionado(
-              idSelecionado: widget.idSelecionado!,
+            await actions.updateDBLocalEtapaOS(
+              (_model.etapaOS?.jsonBody ?? ''),
             );
           } else {
             _model.verificarInternet = false;
@@ -179,10 +179,8 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                     },
                   ),
                 if (_model.verificarInternet == true)
-                  FutureBuilder<List<GetOSidSelecionadoRow>>(
-                    future: SQLiteManager.instance.getOSidSelecionado(
-                      idSelecionado: widget.ordemServicoId!,
-                    ),
+                  FutureBuilder<List<GetEtapaOSRow>>(
+                    future: SQLiteManager.instance.getEtapaOS(),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
                       if (!snapshot.hasData) {
@@ -198,30 +196,31 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                           ),
                         );
                       }
-                      final rowOnlineGetOSidSelecionadoRowList = snapshot.data!;
+                      final rowOnlineGetEtapaOSRowList = snapshot.data!;
 
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
-                          children: List.generate(
-                              rowOnlineGetOSidSelecionadoRowList.length,
-                              (rowOnlineIndex) {
-                            final rowOnlineGetOSidSelecionadoRow =
-                                rowOnlineGetOSidSelecionadoRowList[
-                                    rowOnlineIndex];
+                          children:
+                              List.generate(rowOnlineGetEtapaOSRowList.length,
+                                  (rowOnlineIndex) {
+                            final rowOnlineGetEtapaOSRow =
+                                rowOnlineGetEtapaOSRowList[rowOnlineIndex];
                             return FFButtonWidget(
                               onPressed: () async {
                                 safeSetState(() {});
                               },
-                              text: rowOnlineGetOSidSelecionadoRow.titulo,
+                              text: rowOnlineGetEtapaOSRow.titulo,
                               options: FFButtonOptions(
                                 height: 40.0,
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context).secondary,
+                                color: _model.verificarInternet
+                                    ? const Color(0xFF14E71E)
+                                    : const Color(0xFFE90E0E),
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
@@ -238,10 +237,8 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                       );
                     },
                   ),
-                FutureBuilder<List<GetOSidSelecionadoRow>>(
-                  future: SQLiteManager.instance.getOSidSelecionado(
-                    idSelecionado: widget.ordemServicoId!,
-                  ),
+                FutureBuilder<List<GetAllOSsRow>>(
+                  future: SQLiteManager.instance.getAllOSs(),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.
                     if (!snapshot.hasData) {
@@ -257,7 +254,7 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                         ),
                       );
                     }
-                    final containerGetOSidSelecionadoRowList = snapshot.data!;
+                    final containerGetAllOSsRowList = snapshot.data!;
 
                     return Container(
                       width: MediaQuery.sizeOf(context).width * 1.0,
@@ -267,10 +264,8 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                       ),
                       child: Visibility(
                         visible: !_model.verificarInternet,
-                        child: FutureBuilder<List<GetImgidSelecionadoRow>>(
-                          future: SQLiteManager.instance.getImgidSelecionado(
-                            idSelecionado: widget.ordemServicoId!,
-                          ),
+                        child: FutureBuilder<List<GetAllOSsRow>>(
+                          future: SQLiteManager.instance.getAllOSs(),
                           builder: (context, snapshot) {
                             // Customize what your widget looks like when it's loading.
                             if (!snapshot.hasData) {
@@ -286,7 +281,7 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                                 ),
                               );
                             }
-                            final gridViewOfflineGetImgidSelecionadoRowList =
+                            final gridViewOfflineGetAllOSsRowList =
                                 snapshot.data!;
 
                             return GridView.builder(
@@ -299,12 +294,10 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                                 childAspectRatio: 1.0,
                               ),
                               scrollDirection: Axis.vertical,
-                              itemCount:
-                                  gridViewOfflineGetImgidSelecionadoRowList
-                                      .length,
+                              itemCount: gridViewOfflineGetAllOSsRowList.length,
                               itemBuilder: (context, gridViewOfflineIndex) {
-                                final gridViewOfflineGetImgidSelecionadoRow =
-                                    gridViewOfflineGetImgidSelecionadoRowList[
+                                final gridViewOfflineGetAllOSsRow =
+                                    gridViewOfflineGetAllOSsRowList[
                                         gridViewOfflineIndex];
                                 return Container(
                                   width: 100.0,
@@ -398,8 +391,7 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
                                         ),
                                       ),
                                       Text(
-                                        gridViewOfflineGetImgidSelecionadoRow.id
-                                            .toString(),
+                                        gridViewOfflineGetAllOSsRow.titulo,
                                         maxLines: 2,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
