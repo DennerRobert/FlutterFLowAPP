@@ -51,7 +51,10 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -139,7 +142,7 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                                       Text(
                                         valueOrDefault<String>(
                                           widget.idordem?.toString(),
-                                          '#ID',
+                                          'ID da OS',
                                         ),
                                         style: FlutterFlowTheme.of(context)
                                             .headlineSmall
@@ -166,7 +169,7 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                                     child: Text(
                                       valueOrDefault<String>(
                                         widget.status,
-                                        '0',
+                                        'Status',
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodySmall
@@ -263,7 +266,7 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                                 Text(
                                   valueOrDefault<String>(
                                     widget.endereco,
-                                    '0',
+                                    'Endereço',
                                   ),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium

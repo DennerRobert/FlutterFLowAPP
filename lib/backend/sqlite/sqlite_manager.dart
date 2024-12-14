@@ -22,8 +22,8 @@ class SQLiteManager {
       return;
     }
     _database = await initializeDatabaseFromDbFile(
-      'database',
-      'dbtestes.db',
+      'sqlitelocaldb',
+      'sqlite_lical.db',
     );
   }
 
@@ -53,6 +53,14 @@ class SQLiteManager {
         _database,
       );
 
+  Future<List<GetAllOSsCopyRow>> getAllOSsCopy({
+    String? id,
+  }) =>
+      performGetAllOSsCopy(
+        _database,
+        id: id,
+      );
+
   /// END READ QUERY CALLS
 
   /// START UPDATE QUERY CALLS
@@ -75,6 +83,48 @@ class SQLiteManager {
         _database,
         titulo: titulo,
         endereco: endereco,
+      );
+
+  Future insertupdateetapaos({
+    int? id,
+    String? titulo,
+  }) =>
+      performInsertupdateetapaos(
+        _database,
+        id: id,
+        titulo: titulo,
+      );
+
+  Future updateOS({
+    String? osconteudo,
+    int? supabaseid,
+    String? osstatustxt,
+    String? osprioridade,
+    String? osmotivodescricao,
+    String? osobservacao,
+    String? enderecobairro,
+    String? enderecologradouro,
+    String? clienteid,
+  }) =>
+      performUpdateOS(
+        _database,
+        osconteudo: osconteudo,
+        supabaseid: supabaseid,
+        osstatustxt: osstatustxt,
+        osprioridade: osprioridade,
+        osmotivodescricao: osmotivodescricao,
+        osobservacao: osobservacao,
+        enderecobairro: enderecobairro,
+        enderecologradouro: enderecologradouro,
+        clienteid: clienteid,
+      );
+
+  Future testeloop() => performTesteloop(
+        _database,
+      );
+
+  Future limpabancoOS() => performLimpabancoOS(
+        _database,
       );
 
   /// END UPDATE QUERY CALLS

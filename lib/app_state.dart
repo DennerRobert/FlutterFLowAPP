@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '/backend/schema/structs/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'dart:convert';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -59,6 +59,28 @@ class FFAppState extends ChangeNotifier {
               }).toList() ??
               _ListaOrdemServico;
     });
+    _safeInit(() {
+      _testeIDunico = prefs.getInt('ff_testeIDunico') ?? _testeIDunico;
+    });
+    _safeInit(() {
+      _testeTituloUnico =
+          prefs.getString('ff_testeTituloUnico') ?? _testeTituloUnico;
+    });
+    _safeInit(() {
+      _ListOSDataType = prefs
+              .getStringList('ff_ListOSDataType')
+              ?.map((x) {
+                try {
+                  return GetAllOSStruct.fromSerializableMap(jsonDecode(x));
+                } catch (e) {
+                  print("Can't decode persisted data type. Error: $e.");
+                  return null;
+                }
+              })
+              .withoutNulls
+              .toList() ??
+          _ListOSDataType;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -110,7 +132,7 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_imagemList', _imagemList);
   }
 
-  List<dynamic> _ListaEtapaOS = [jsonDecode('{}')];
+  List<dynamic> _ListaEtapaOS = [];
   List<dynamic> get ListaEtapaOS => _ListaEtapaOS;
   set ListaEtapaOS(List<dynamic> value) {
     _ListaEtapaOS = value;
@@ -192,9 +214,7 @@ class FFAppState extends ChangeNotifier {
         _ListaEntradaDados.map((x) => jsonEncode(x)).toList());
   }
 
-  List<dynamic> _ListaOrdemServico = [
-    jsonDecode('{\"id\":\"aaaaaaaaaaaaaaaaaaaaa\"}')
-  ];
+  List<dynamic> _ListaOrdemServico = [];
   List<dynamic> get ListaOrdemServico => _ListaOrdemServico;
   set ListaOrdemServico(List<dynamic> value) {
     _ListaOrdemServico = value;
@@ -233,6 +253,61 @@ class FFAppState extends ChangeNotifier {
     ListaOrdemServico.insert(index, value);
     prefs.setStringList('ff_ListaOrdemServico',
         _ListaOrdemServico.map((x) => jsonEncode(x)).toList());
+  }
+
+  int _testeIDunico = 999;
+  int get testeIDunico => _testeIDunico;
+  set testeIDunico(int value) {
+    _testeIDunico = value;
+    prefs.setInt('ff_testeIDunico', value);
+  }
+
+  String _testeTituloUnico = 'Teste Etapa unica Titulo';
+  String get testeTituloUnico => _testeTituloUnico;
+  set testeTituloUnico(String value) {
+    _testeTituloUnico = value;
+    prefs.setString('ff_testeTituloUnico', value);
+  }
+
+  List<GetAllOSStruct> _ListOSDataType = [];
+  List<GetAllOSStruct> get ListOSDataType => _ListOSDataType;
+  set ListOSDataType(List<GetAllOSStruct> value) {
+    _ListOSDataType = value;
+    prefs.setStringList(
+        'ff_ListOSDataType', value.map((x) => x.serialize()).toList());
+  }
+
+  void addToListOSDataType(GetAllOSStruct value) {
+    ListOSDataType.add(value);
+    prefs.setStringList('ff_ListOSDataType',
+        _ListOSDataType.map((x) => x.serialize()).toList());
+  }
+
+  void removeFromListOSDataType(GetAllOSStruct value) {
+    ListOSDataType.remove(value);
+    prefs.setStringList('ff_ListOSDataType',
+        _ListOSDataType.map((x) => x.serialize()).toList());
+  }
+
+  void removeAtIndexFromListOSDataType(int index) {
+    ListOSDataType.removeAt(index);
+    prefs.setStringList('ff_ListOSDataType',
+        _ListOSDataType.map((x) => x.serialize()).toList());
+  }
+
+  void updateListOSDataTypeAtIndex(
+    int index,
+    GetAllOSStruct Function(GetAllOSStruct) updateFn,
+  ) {
+    ListOSDataType[index] = updateFn(_ListOSDataType[index]);
+    prefs.setStringList('ff_ListOSDataType',
+        _ListOSDataType.map((x) => x.serialize()).toList());
+  }
+
+  void insertAtIndexInListOSDataType(int index, GetAllOSStruct value) {
+    ListOSDataType.insert(index, value);
+    prefs.setStringList('ff_ListOSDataType',
+        _ListOSDataType.map((x) => x.serialize()).toList());
   }
 }
 

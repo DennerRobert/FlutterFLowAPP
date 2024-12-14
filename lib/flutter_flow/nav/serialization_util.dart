@@ -273,6 +273,8 @@ dynamic deserializeParam<T>(
             return GetAllOSsRow(data);
           case GetEtapaOSRow:
             return GetEtapaOSRow(data);
+          case GetAllOSsCopyRow:
+            return GetAllOSsCopyRow(data);
           default:
             return null;
         }

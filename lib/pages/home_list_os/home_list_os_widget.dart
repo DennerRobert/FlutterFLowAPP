@@ -1,4 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/sqlite/sqlite_manager.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -6,6 +8,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'home_list_os_model.dart';
@@ -28,6 +31,103 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
     super.initState();
     _model = createModel(context, () => HomeListOsModel());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await Future.wait([
+        Future(() async {
+          // Call API
+          _model.oSAPIResponse = await GetOrdensServicoCall.call();
+
+          if ((_model.oSAPIResponse?.succeeded ?? true)) {
+            // Save Data SQLite
+            FFAppState().ListaOrdemServico =
+                (_model.oSAPIResponse?.jsonBody ?? '').toList().cast<dynamic>();
+            safeSetState(() {});
+            while (_model.contador < FFAppState().ListaOrdemServico.length) {
+              // ID Supabase
+              _model.idSupabase = getJsonField(
+                FFAppState().ListaOrdemServico.elementAtOrNull(_model.contador),
+                r'''$["id"]''',
+              );
+              safeSetState(() {});
+              _model.iDOSBaseLocal = await SQLiteManager.instance.getAllOSsCopy(
+                id: _model.idSupabase!.toString(),
+              );
+              if (_model.iDOSBaseLocal?.firstOrNull?.supabaseId !=
+                  _model.idSupabase) {
+                await SQLiteManager.instance.updateOS(
+                  osconteudo: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["os_conteudo"]''',
+                  ).toString().toString(),
+                  supabaseid: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["id"]''',
+                  ),
+                  osstatustxt: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["os_status_txt"]''',
+                  ).toString().toString(),
+                  osprioridade: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["os_prioridade"]''',
+                  ).toString().toString(),
+                  osmotivodescricao: valueOrDefault<String>(
+                    getJsonField(
+                      FFAppState()
+                          .ListaOrdemServico
+                          .elementAtOrNull(_model.contador),
+                      r'''$["os_motivo_descricao"]''',
+                    )?.toString().toString(),
+                    'nao tem dado',
+                  ),
+                  osobservacao: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["os_observacao"]''',
+                  ).toString().toString(),
+                  enderecobairro: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["endereco_bairro"]''',
+                  ).toString().toString(),
+                  enderecologradouro: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["endereco_logradouro"]''',
+                  ).toString().toString(),
+                  clienteid: getJsonField(
+                    FFAppState()
+                        .ListaOrdemServico
+                        .elementAtOrNull(_model.contador),
+                    r'''$["cliente_id"]''',
+                  ).toString().toString(),
+                );
+              } else {
+                _model.contador = _model.contador + 1;
+                safeSetState(() {});
+              }
+
+              // Contador
+              _model.contador = _model.contador + 1;
+              safeSetState(() {});
+            }
+          }
+        }),
+      ]);
+    });
+
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
   }
@@ -44,7 +144,10 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).alternate,
@@ -549,10 +652,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                     children: [
                                       if ((_model.searchActive == '1') &&
                                           (_model.textController.text == ''))
-                                        FutureBuilder<List<OrdemServicoRow>>(
-                                          future: OrdemServicoTable().queryRows(
-                                            queryFn: (q) => q,
-                                          ),
+                                        FutureBuilder<List<GetAllOSsRow>>(
+                                          future: SQLiteManager.instance
+                                              .getAllOSs(),
                                           builder: (context, snapshot) {
                                             // Customize what your widget looks like when it's loading.
                                             if (!snapshot.hasData) {
@@ -573,8 +675,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                 ),
                                               );
                                             }
-                                            List<OrdemServicoRow>
-                                                listViewALLOrdemServicoRowList =
+                                            final listViewALLGetAllOSsRowList =
                                                 snapshot.data!;
 
                                             return ListView.separated(
@@ -583,14 +684,14 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                               shrinkWrap: true,
                                               scrollDirection: Axis.vertical,
                                               itemCount:
-                                                  listViewALLOrdemServicoRowList
+                                                  listViewALLGetAllOSsRowList
                                                       .length,
                                               separatorBuilder: (_, __) =>
                                                   const SizedBox(height: 0.0),
                                               itemBuilder:
                                                   (context, listViewALLIndex) {
-                                                final listViewALLOrdemServicoRow =
-                                                    listViewALLOrdemServicoRowList[
+                                                final listViewALLGetAllOSsRow =
+                                                    listViewALLGetAllOSsRowList[
                                                         listViewALLIndex];
                                                 return Padding(
                                                   padding: const EdgeInsetsDirectional
@@ -611,38 +712,38 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                         queryParameters: {
                                                           'idordem':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .id,
                                                             ParamType.int,
                                                           ),
                                                           'nome':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .osMotivoDescricao,
                                                             ParamType.String,
                                                           ),
                                                           'endereco':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .enderecoLogradouro,
                                                             ParamType.String,
                                                           ),
                                                           'cliente':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .clienteId
                                                                 ?.toString(),
                                                             ParamType.String,
                                                           ),
                                                           'status':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .osStatusTxt,
                                                             ParamType.String,
                                                           ),
                                                           'conteudo':
                                                               serializeParam(
-                                                            listViewALLOrdemServicoRow
+                                                            listViewALLGetAllOSsRow
                                                                 .osConteudo,
                                                             ParamType.String,
                                                           ),
@@ -671,28 +772,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 1.0,
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: () {
-                                                            if (listViewALLOrdemServicoRow
-                                                                    .osStatusTxt ==
-                                                                'Em progresso') {
-                                                              return const Color(
-                                                                  0xFFF9DBB1);
-                                                            } else if (listViewALLOrdemServicoRow
-                                                                    .osStatusTxt ==
-                                                                'Aguardando') {
-                                                              return const Color(
-                                                                  0xFFDADADF);
-                                                            } else if (listViewALLOrdemServicoRow
-                                                                    .osStatusTxt ==
-                                                                'Encerrada') {
-                                                              return const Color(
-                                                                  0xFF9FD8F7);
-                                                            } else {
-                                                              return FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryBackground;
-                                                            }
-                                                          }(),
+                                                          color:
+                                                              const Color(0xFFF1F4F8),
                                                           boxShadow: const [
                                                             BoxShadow(
                                                               blurRadius: 4.0,
@@ -709,28 +790,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                   .circular(
                                                                       16.0),
                                                           border: Border.all(
-                                                            color: () {
-                                                              if (listViewALLOrdemServicoRow
-                                                                      .osStatusTxt ==
-                                                                  'Em progresso') {
-                                                                return const Color(
-                                                                    0xFFFDB23B);
-                                                              } else if (listViewALLOrdemServicoRow
-                                                                      .osStatusTxt ==
-                                                                  'Aguardando') {
-                                                                return const Color(
-                                                                    0xFFAFAFAF);
-                                                              } else if (listViewALLOrdemServicoRow
-                                                                      .osStatusTxt ==
-                                                                  'Encerrada') {
-                                                                return const Color(
-                                                                    0xFF1CABEC);
-                                                              } else {
-                                                                return FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground;
-                                                              }
-                                                            }(),
+                                                            color: const Color(
+                                                                0xFFFDB23B),
                                                             width: 3.0,
                                                           ),
                                                         ),
@@ -805,7 +866,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                               0.0),
                                                                           child:
                                                                               Text(
-                                                                            listViewALLOrdemServicoRow.id.toString(),
+                                                                            listViewALLGetAllOSsRow.id.toString(),
                                                                             style: FlutterFlowTheme.of(context).headlineSmall.override(
                                                                                   fontFamily: 'Inter Tight',
                                                                                   color: FlutterFlowTheme.of(context).primaryText,
@@ -822,12 +883,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                         33.0,
                                                                     decoration:
                                                                         BoxDecoration(
-                                                                      color: listViewALLOrdemServicoRow.osStatusTxt ==
-                                                                              'Em progresso'
-                                                                          ? const Color(
-                                                                              0xFFFDB23B)
-                                                                          : FlutterFlowTheme.of(context)
-                                                                              .secondaryText,
+                                                                      color: const Color(
+                                                                          0xC922C92F),
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               10.0),
@@ -847,9 +904,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                           Text(
                                                                         valueOrDefault<
                                                                             String>(
-                                                                          listViewALLOrdemServicoRow
+                                                                          listViewALLGetAllOSsRow
                                                                               .osStatusTxt,
-                                                                          'STATUS',
+                                                                          'Status',
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodySmall
@@ -887,9 +944,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                     child: Text(
                                                                       valueOrDefault<
                                                                           String>(
-                                                                        listViewALLOrdemServicoRow
+                                                                        listViewALLGetAllOSsRow
                                                                             .osMotivoDescricao,
-                                                                        'null',
+                                                                        'Título',
                                                                       ).maybeHandleOverflow(
                                                                         maxChars:
                                                                             30,
@@ -943,10 +1000,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                     child: Text(
                                                                       valueOrDefault<
                                                                           String>(
-                                                                        listViewALLOrdemServicoRow
-                                                                            .clienteId
-                                                                            ?.toString(),
-                                                                        'null',
+                                                                        listViewALLIndex
+                                                                            .toString(),
+                                                                        'ssd',
                                                                       ),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
@@ -999,9 +1055,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                           Text(
                                                                         valueOrDefault<
                                                                             String>(
-                                                                          listViewALLOrdemServicoRow
-                                                                              .enderecoLogradouro,
-                                                                          'null',
+                                                                          listViewALLIndex
+                                                                              .toString(),
+                                                                          'Endereço',
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyMedium
@@ -1027,50 +1083,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 children: [
                                                                   FFButtonWidget(
                                                                     onPressed:
-                                                                        () async {
-                                                                      context
-                                                                          .pushNamed(
-                                                                        'OrdemServico',
-                                                                        queryParameters:
-                                                                            {
-                                                                          'idordem':
-                                                                              serializeParam(
-                                                                            0,
-                                                                            ParamType.int,
-                                                                          ),
-                                                                          'nome':
-                                                                              serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'endereco':
-                                                                              serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'cliente':
-                                                                              serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'status':
-                                                                              serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'conteudo':
-                                                                              serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'idSelecionado':
-                                                                              serializeParam(
-                                                                            listViewALLOrdemServicoRow.id,
-                                                                            ParamType.int,
-                                                                          ),
-                                                                        }.withoutNulls,
-                                                                      );
-                                                                    },
+                                                                        () async {},
                                                                     text:
                                                                         'Ver Detalhes',
                                                                     options:
@@ -1121,45 +1134,47 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  if (listViewALLOrdemServicoRow
-                                                                          .osPrioridade ==
-                                                                      'Em atraso')
-                                                                    Container(
-                                                                      width:
-                                                                          110.0,
-                                                                      height:
-                                                                          35.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: const Color(
-                                                                            0xFFFD0206),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                      ),
-                                                                      child:
-                                                                          Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        children: [
-                                                                          Text(
-                                                                            valueOrDefault<String>(
-                                                                              listViewALLOrdemServicoRow.osPrioridade,
-                                                                              'Atrasada',
-                                                                            ),
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                  fontFamily: 'Inter',
-                                                                                  color: Colors.white,
-                                                                                  letterSpacing: 0.0,
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
+                                                                  Container(
+                                                                    width:
+                                                                        110.0,
+                                                                    height:
+                                                                        35.0,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: const Color(
+                                                                          0xFFFD0206),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
                                                                     ),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                            listViewALLGetAllOSsRow.osPrioridade,
+                                                                            'Prioridade',
+                                                                          ),
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Inter',
+                                                                                color: Colors.white,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               ),
                                                             ].divide(const SizedBox(

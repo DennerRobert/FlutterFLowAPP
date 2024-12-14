@@ -60,7 +60,7 @@ Future<List<GetAllOSsRow>> performGetAllOSs(
   Database database,
 ) {
   const query = '''
-SELECT * FROM ordemServico;
+SELECT * FROM ordem_servico;
 ''';
   return _readQuery(database, query, (d) => GetAllOSsRow(d));
 }
@@ -69,13 +69,24 @@ class GetAllOSsRow extends SqliteRow {
   GetAllOSsRow(super.data);
 
   int get id => data['id'] as int;
-  String get titulo => data['titulo'] as String;
-  int get protocolo => data['protocolo'] as int;
-  String get cliente => data['cliente'] as String;
-  String get endereco => data['endereco'] as String;
-  int get status => data['status'] as int;
-  String get situacao => data['situacao'] as String;
-  int get idTecnico => data['id_tecnico'] as int;
+  int? get supabaseId => data['supabase_id'] as int?;
+  int? get sgpId => data['sgp_id'] as int?;
+  DateTime? get dtAdicao => data['dt_adicao'] as DateTime?;
+  DateTime? get dtEdicao => data['dt_edicao'] as DateTime?;
+  int? get ativo => data['ativo'] as int?;
+  String? get osStatusTxt => data['os_status_txt'] as String?;
+  String? get osPrioridade => data['os_prioridade'] as String?;
+  String? get osMotivoDescricao => data['os_motivo_descricao'] as String?;
+  String? get osObservacao => data['os_observacao'] as String?;
+  String? get osConteudo => data['os_conteudo'] as String?;
+  String? get enderecoBairro => data['endereco_bairro'] as String?;
+  String? get enderecoLogradouro => data['endereco_logradouro'] as String?;
+  int? get clienteId => data['cliente_id'] as int?;
+  DateTime? get dataAgendamento => data['data_agendamento'] as DateTime?;
+  int? get tipoOsId => data['tipo_os_id'] as int?;
+  int? get supervisorId => data['supervisor_id'] as int?;
+  int? get tecnicoRespId => data['tecnico_resp_id'] as int?;
+  int? get tecnicoAuxId => data['tecnico_aux_id'] as int?;
 }
 
 /// END GETALLOSS
@@ -98,3 +109,23 @@ class GetEtapaOSRow extends SqliteRow {
 }
 
 /// END GET ETAPAOS
+
+/// BEGIN GETALLOSSCOPY
+Future<List<GetAllOSsCopyRow>> performGetAllOSsCopy(
+  Database database, {
+  String? id,
+}) {
+  final query = '''
+SELECT * FROM ordem_servico WHERE supabase_id=$id;
+''';
+  return _readQuery(database, query, (d) => GetAllOSsCopyRow(d));
+}
+
+class GetAllOSsCopyRow extends SqliteRow {
+  GetAllOSsCopyRow(super.data);
+
+  int get id => data['id'] as int;
+  int? get supabaseId => data['supabase_id'] as int?;
+}
+
+/// END GETALLOSSCOPY

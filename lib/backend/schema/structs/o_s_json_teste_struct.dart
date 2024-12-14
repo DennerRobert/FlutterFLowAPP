@@ -5,13 +5,13 @@ import '/backend/schema/util/schema_util.dart';
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
-class GetAllOSStruct extends BaseStruct {
-  GetAllOSStruct({
+class OSJsonTesteStruct extends BaseStruct {
+  OSJsonTesteStruct({
     int? id,
     String? createdAt,
     String? dtAdicao,
     String? dtEdicao,
-    String? ativo,
+    bool? ativo,
     String? osStatusTxt,
     String? osPrioridade,
     String? osMotivoDescricao,
@@ -77,9 +77,9 @@ class GetAllOSStruct extends BaseStruct {
   bool hasDtEdicao() => _dtEdicao != null;
 
   // "ativo" field.
-  String? _ativo;
-  String get ativo => _ativo ?? '';
-  set ativo(String? val) => _ativo = val;
+  bool? _ativo;
+  bool get ativo => _ativo ?? true;
+  set ativo(bool? val) => _ativo = val;
 
   bool hasAtivo() => _ativo != null;
 
@@ -183,12 +183,13 @@ class GetAllOSStruct extends BaseStruct {
 
   bool hasSync() => _sync != null;
 
-  static GetAllOSStruct fromMap(Map<String, dynamic> data) => GetAllOSStruct(
+  static OSJsonTesteStruct fromMap(Map<String, dynamic> data) =>
+      OSJsonTesteStruct(
         id: castToType<int>(data['id']),
         createdAt: data['created_at'] as String?,
         dtAdicao: data['dt_adicao'] as String?,
         dtEdicao: data['dt_edicao'] as String?,
-        ativo: data['ativo'] as String?,
+        ativo: data['ativo'] as bool?,
         osStatusTxt: data['os_status_txt'] as String?,
         osPrioridade: data['os_prioridade'] as String?,
         osMotivoDescricao: data['os_motivo_descricao'] as String?,
@@ -205,8 +206,9 @@ class GetAllOSStruct extends BaseStruct {
         sync: data['sync'] as bool?,
       );
 
-  static GetAllOSStruct? maybeFromMap(dynamic data) =>
-      data is Map ? GetAllOSStruct.fromMap(data.cast<String, dynamic>()) : null;
+  static OSJsonTesteStruct? maybeFromMap(dynamic data) => data is Map
+      ? OSJsonTesteStruct.fromMap(data.cast<String, dynamic>())
+      : null;
 
   Map<String, dynamic> toMap() => {
         'id': _id,
@@ -250,7 +252,7 @@ class GetAllOSStruct extends BaseStruct {
         ),
         'ativo': serializeParam(
           _ativo,
-          ParamType.String,
+          ParamType.bool,
         ),
         'os_status_txt': serializeParam(
           _osStatusTxt,
@@ -310,8 +312,8 @@ class GetAllOSStruct extends BaseStruct {
         ),
       }.withoutNulls;
 
-  static GetAllOSStruct fromSerializableMap(Map<String, dynamic> data) =>
-      GetAllOSStruct(
+  static OSJsonTesteStruct fromSerializableMap(Map<String, dynamic> data) =>
+      OSJsonTesteStruct(
         id: deserializeParam(
           data['id'],
           ParamType.int,
@@ -334,7 +336,7 @@ class GetAllOSStruct extends BaseStruct {
         ),
         ativo: deserializeParam(
           data['ativo'],
-          ParamType.String,
+          ParamType.bool,
           false,
         ),
         osStatusTxt: deserializeParam(
@@ -410,11 +412,11 @@ class GetAllOSStruct extends BaseStruct {
       );
 
   @override
-  String toString() => 'GetAllOSStruct(${toMap()})';
+  String toString() => 'OSJsonTesteStruct(${toMap()})';
 
   @override
   bool operator ==(Object other) {
-    return other is GetAllOSStruct &&
+    return other is OSJsonTesteStruct &&
         id == other.id &&
         createdAt == other.createdAt &&
         dtAdicao == other.dtAdicao &&
@@ -460,12 +462,12 @@ class GetAllOSStruct extends BaseStruct {
       ]);
 }
 
-GetAllOSStruct createGetAllOSStruct({
+OSJsonTesteStruct createOSJsonTesteStruct({
   int? id,
   String? createdAt,
   String? dtAdicao,
   String? dtEdicao,
-  String? ativo,
+  bool? ativo,
   String? osStatusTxt,
   String? osPrioridade,
   String? osMotivoDescricao,
@@ -481,7 +483,7 @@ GetAllOSStruct createGetAllOSStruct({
   String? tecnicoAuxId,
   bool? sync,
 }) =>
-    GetAllOSStruct(
+    OSJsonTesteStruct(
       id: id,
       createdAt: createdAt,
       dtAdicao: dtAdicao,

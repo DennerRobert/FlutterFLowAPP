@@ -24,8 +24,8 @@ Future updateDBLocalEtapaOS(List<dynamic> listEtapaOS) async {
           await db.rawQuery('''
                 INSERT INTO etapa_os(titulo) 
                 VALUES(?)
-                ON CONFLICT(id) 
-                DO UPDATE SET titulo = EXCLUDED.titulo
+                // ON CONFLICT(id) 
+                // DO UPDATE SET titulo = EXCLUDED.titulo
                 ''', [titulo]);
         }
       }
