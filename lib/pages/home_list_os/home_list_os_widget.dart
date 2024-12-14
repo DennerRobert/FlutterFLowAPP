@@ -111,7 +111,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                     FFAppState()
                         .ListaOrdemServico
                         .elementAtOrNull(_model.contador),
-                    r'''$["cliente_id"]''',
+                    r'''$["os_conteudo"]''',
                   ).toString().toString(),
                 );
               } else {
@@ -650,8 +650,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((_model.searchActive == '1') &&
-                                          (_model.textController.text == ''))
+                                      if (_model.searchActive == '1')
                                         FutureBuilder<List<GetAllOSsRow>>(
                                           future: SQLiteManager.instance
                                               .getAllOSs(),
@@ -945,7 +944,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                       valueOrDefault<
                                                                           String>(
                                                                         listViewALLGetAllOSsRow
-                                                                            .osMotivoDescricao,
+                                                                            .osConteudo,
                                                                         'Título',
                                                                       ).maybeHandleOverflow(
                                                                         maxChars:
@@ -1000,9 +999,10 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                     child: Text(
                                                                       valueOrDefault<
                                                                           String>(
-                                                                        listViewALLIndex
-                                                                            .toString(),
-                                                                        'ssd',
+                                                                        listViewALLGetAllOSsRow
+                                                                            .clienteId
+                                                                            ?.toString(),
+                                                                        'Nome Cliente',
                                                                       ),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
@@ -1055,8 +1055,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                           Text(
                                                                         valueOrDefault<
                                                                             String>(
-                                                                          listViewALLIndex
-                                                                              .toString(),
+                                                                          listViewALLGetAllOSsRow
+                                                                              .enderecoLogradouro,
                                                                           'Endereço',
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)

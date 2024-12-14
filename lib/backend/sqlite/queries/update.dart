@@ -88,7 +88,7 @@ INSERT  INTO ordem_servico (
     '$osconteudo',
     '$enderecobairro',
     '$enderecologradouro',
-    '$clienteid',
+    '$osconteudo',
     '2024-12-15 08:00:00',
     2,
     3,

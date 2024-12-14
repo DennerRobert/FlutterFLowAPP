@@ -7,7 +7,6 @@ import '/backend/schema/structs/index.dart';
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
-import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
@@ -74,13 +73,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? const NavBarPage() : const LoginWidget(),
+          appStateNotifier.loggedIn ? const HomeListOsWidget() : const LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? const NavBarPage() : const LoginWidget(),
+              appStateNotifier.loggedIn ? const HomeListOsWidget() : const LoginWidget(),
         ),
         FFRoute(
           name: 'Login',
@@ -134,16 +133,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'Perfil',
           path: '/perfil',
-          builder: (context, params) => params.isEmpty
-              ? const NavBarPage(initialPage: 'Perfil')
-              : const PerfilWidget(),
+          builder: (context, params) => const PerfilWidget(),
         ),
         FFRoute(
           name: 'HomeListOs',
           path: '/homeListOs',
-          builder: (context, params) => params.isEmpty
-              ? const NavBarPage(initialPage: 'HomeListOs')
-              : const HomeListOsWidget(),
+          builder: (context, params) => const HomeListOsWidget(),
         ),
         FFRoute(
           name: 'AuditoriaTecOnOff',
