@@ -1,4 +1,3 @@
-import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/sqlite/sqlite_manager.dart';
 import '/backend/supabase/supabase.dart';
@@ -6,6 +5,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/instant_timer.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,94 +36,125 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
       await Future.wait([
         Future(() async {
           // Call API
-          _model.oSAPIResponse = await GetOrdensServicoCall.call();
+          _model.instantTimer = InstantTimer.periodic(
+            duration: const Duration(milliseconds: 10000),
+            callback: (timer) async {
+              // Call API
+              _model.oSAPIResponse = await GetOrdensServicoCall.call();
 
-          if ((_model.oSAPIResponse?.succeeded ?? true)) {
-            // Save Data SQLite
-            FFAppState().ListaOrdemServico =
-                (_model.oSAPIResponse?.jsonBody ?? '').toList().cast<dynamic>();
-            safeSetState(() {});
-            while (_model.contador < FFAppState().ListaOrdemServico.length) {
-              // ID Supabase
-              _model.idSupabase = getJsonField(
-                FFAppState().ListaOrdemServico.elementAtOrNull(_model.contador),
-                r'''$["id"]''',
-              );
-              safeSetState(() {});
-              _model.iDOSBaseLocal = await SQLiteManager.instance.getAllOSsCopy(
-                id: _model.idSupabase!.toString(),
-              );
-              if (_model.iDOSBaseLocal?.firstOrNull?.supabaseId !=
-                  _model.idSupabase) {
-                await SQLiteManager.instance.updateOS(
-                  osconteudo: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["os_conteudo"]''',
-                  ).toString().toString(),
-                  supabaseid: getJsonField(
+              if ((_model.oSAPIResponse?.succeeded ?? true)) {
+                // Save Data SQLite
+                FFAppState().ListaOrdemServico =
+                    (_model.oSAPIResponse?.jsonBody ?? '')
+                        .toList()
+                        .cast<dynamic>();
+                safeSetState(() {});
+                _model.verifOnline = false;
+                safeSetState(() {});
+                while (
+                    _model.contador < FFAppState().ListaOrdemServico.length) {
+                  // ID Supabase
+                  _model.idSupabase = getJsonField(
                     FFAppState()
                         .ListaOrdemServico
                         .elementAtOrNull(_model.contador),
                     r'''$["id"]''',
-                  ),
-                  osstatustxt: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["os_status_txt"]''',
-                  ).toString().toString(),
-                  osprioridade: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["os_prioridade"]''',
-                  ).toString().toString(),
-                  osmotivodescricao: valueOrDefault<String>(
-                    getJsonField(
-                      FFAppState()
-                          .ListaOrdemServico
-                          .elementAtOrNull(_model.contador),
-                      r'''$["os_motivo_descricao"]''',
-                    )?.toString().toString(),
-                    'nao tem dado',
-                  ),
-                  osobservacao: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["os_observacao"]''',
-                  ).toString().toString(),
-                  enderecobairro: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["endereco_bairro"]''',
-                  ).toString().toString(),
-                  enderecologradouro: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["endereco_logradouro"]''',
-                  ).toString().toString(),
-                  clienteid: getJsonField(
-                    FFAppState()
-                        .ListaOrdemServico
-                        .elementAtOrNull(_model.contador),
-                    r'''$["os_conteudo"]''',
-                  ).toString().toString(),
-                );
+                  );
+                  safeSetState(() {});
+                  _model.iDOSBaseLocal =
+                      await SQLiteManager.instance.getAllOSsCopy(
+                    id: _model.idSupabase!.toString(),
+                  );
+                  if (_model.iDOSBaseLocal?.firstOrNull?.supabaseId !=
+                      _model.idSupabase) {
+                    await SQLiteManager.instance.updateOS(
+                      osconteudo: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["os_conteudo"]''',
+                      ).toString().toString(),
+                      supabaseid: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["id"]''',
+                      ),
+                      osstatustxt: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["os_status_txt"]''',
+                      ).toString().toString(),
+                      osprioridade: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["os_prioridade"]''',
+                      ).toString().toString(),
+                      osmotivodescricao: valueOrDefault<String>(
+                        getJsonField(
+                          FFAppState()
+                              .ListaOrdemServico
+                              .elementAtOrNull(_model.contador),
+                          r'''$["os_motivo_descricao"]''',
+                        )?.toString().toString(),
+                        'nao tem dado',
+                      ),
+                      osobservacao: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["os_observacao"]''',
+                      ).toString().toString(),
+                      enderecobairro: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["endereco_bairro"]''',
+                      ).toString().toString(),
+                      enderecologradouro: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["endereco_logradouro"]''',
+                      ).toString().toString(),
+                      clienteid: getJsonField(
+                        FFAppState()
+                            .ListaOrdemServico
+                            .elementAtOrNull(_model.contador),
+                        r'''$["cliente_id"]''',
+                      ),
+                    );
+                  } else {
+                    _model.contador = _model.contador + 1;
+                    safeSetState(() {});
+                  }
+
+                  // Contador
+                  _model.contador = _model.contador + 1;
+                  safeSetState(() {});
+                }
+                _model.dadosUser = await GetDadosUsuarioCall.call();
+
+                if ((_model.dadosUser?.succeeded ?? true)) {
+                  FFAppState().ListaDadosUsuario =
+                      (_model.dadosUser?.jsonBody ?? '')
+                          .toList()
+                          .cast<dynamic>();
+                  safeSetState(() {});
+                  while (_model.contadorUser <
+                      FFAppState().ListaDadosUsuario.length) {
+                    await SQLiteManager.instance.updateUsuario();
+                  }
+                }
               } else {
-                _model.contador = _model.contador + 1;
+                _model.verifOnline = true;
                 safeSetState(() {});
               }
-
-              // Contador
-              _model.contador = _model.contador + 1;
-              safeSetState(() {});
-            }
-          }
+            },
+            startImmediately: true,
+          );
         }),
       ]);
     });
@@ -173,144 +204,96 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                 children: [
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
-                    child: FutureBuilder<List<UsuarioRow>>(
-                      future: UsuarioTable().querySingleRow(
-                        queryFn: (q) => q.eqOrNull(
-                          'user_id',
-                          currentUserUid,
-                        ),
+                    child: Material(
+                      color: Colors.transparent,
+                      elevation: 10.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  FlutterFlowTheme.of(context).primary,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                        List<UsuarioRow> dadosPessoaisUsuarioRowList =
-                            snapshot.data!;
-
-                        final dadosPessoaisUsuarioRow =
-                            dadosPessoaisUsuarioRowList.isNotEmpty
-                                ? dadosPessoaisUsuarioRowList.first
-                                : null;
-
-                        return Material(
-                          color: Colors.transparent,
-                          elevation: 10.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width * 0.9,
+                        height: MediaQuery.sizeOf(context).height * 0.1,
+                        decoration: BoxDecoration(
+                          color: const Color(0x2BFFFFFF),
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                            color: FlutterFlowTheme.of(context).alternate,
+                            width: 2.0,
                           ),
-                          child: Container(
-                            width: MediaQuery.sizeOf(context).width * 0.9,
-                            height: MediaQuery.sizeOf(context).height * 0.1,
-                            decoration: BoxDecoration(
-                              color: const Color(0x2BFFFFFF),
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                width: 2.0,
-                              ),
-                            ),
-                            child: Align(
-                              alignment: const AlignmentDirectional(0.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        15.0, 0.0, 15.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
+                        ),
+                        child: Align(
+                          alignment: const AlignmentDirectional(0.0, 0.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    15.0, 0.0, 15.0, 0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Material(
-                                              color: Colors.transparent,
-                                              elevation: 4.0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30.0),
-                                              ),
-                                              child: Container(
+                                        Material(
+                                          color: Colors.transparent,
+                                          elevation: 4.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                          child: Container(
+                                            width: 60.0,
+                                            height: 60.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                              child: Image.network(
+                                                'https://images.unsplash.com/photo-1425421669292-0c3da3b8f529?w=500&h=500',
                                                 width: 60.0,
                                                 height: 60.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0),
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0),
-                                                  child: Image.network(
-                                                    valueOrDefault<String>(
-                                                      dadosPessoaisUsuarioRow
-                                                          ?.urlFoto,
-                                                      'https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png',
-                                                    ),
-                                                    width: 60.0,
-                                                    height: 60.0,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  valueOrDefault<String>(
-                                                    dadosPessoaisUsuarioRow
-                                                        ?.nome,
-                                                    'Nome',
+                                          ),
+                                        ),
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .headlineSmall
+                                                  .override(
+                                                    fontFamily: 'Inter Tight',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .alternate,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .headlineSmall
-                                                      .override(
-                                                        fontFamily:
-                                                            'Inter Tight',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .alternate,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  valueOrDefault<String>(
-                                                    dadosPessoaisUsuarioRow
-                                                        ?.funcao,
-                                                    'Cargo',
-                                                  ),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
+                                            ),
+                                            Text(
+                                              '',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
                                                       .bodyMedium
                                                       .override(
                                                         fontFamily: 'Inter',
@@ -320,35 +303,33 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 .alternate,
                                                         letterSpacing: 0.0,
                                                       ),
-                                                ),
-                                              ],
                                             ),
-                                          ].divide(const SizedBox(width: 16.0)),
-                                        ),
-                                        FlutterFlowIconButton(
-                                          borderColor: Colors.transparent,
-                                          borderRadius: 20.0,
-                                          buttonSize: 40.0,
-                                          fillColor: const Color(0x33FFFFFF),
-                                          icon: Icon(
-                                            Icons.notifications_none,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            size: 24.0,
-                                          ),
-                                          onPressed: () {
-                                            print('IconButton pressed ...');
-                                          },
+                                          ],
                                         ),
                                       ].divide(const SizedBox(width: 16.0)),
                                     ),
-                                  ),
-                                ].divide(const SizedBox(height: 16.0)),
+                                    FlutterFlowIconButton(
+                                      borderColor: Colors.transparent,
+                                      borderRadius: 20.0,
+                                      buttonSize: 40.0,
+                                      fillColor: const Color(0x33FFFFFF),
+                                      icon: Icon(
+                                        Icons.notifications_none,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        size: 24.0,
+                                      ),
+                                      onPressed: () {
+                                        print('IconButton pressed ...');
+                                      },
+                                    ),
+                                  ].divide(const SizedBox(width: 16.0)),
+                                ),
                               ),
-                            ),
+                            ].divide(const SizedBox(height: 16.0)),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -383,42 +364,79 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                           Row(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Align(
-                                                alignment: const AlignmentDirectional(
-                                                    1.0, 0.0),
-                                                child: Icon(
-                                                  Icons.calendar_month,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                  size: 24.0,
+                                              if (_model.verifOnline)
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      'SEM CONEXÃO',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily: 'Inter',
+                                                            color: const Color(
+                                                                0xFFFF0000),
+                                                            fontSize: 18.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                          ),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.wifi,
+                                                      color: Color(0xFFF60412),
+                                                      size: 24.0,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                              Text(
-                                                valueOrDefault<String>(
-                                                  dateTimeFormat(
-                                                    "d/M/y",
-                                                    getCurrentTimestamp,
-                                                    locale: FFLocalizations.of(
-                                                            context)
-                                                        .languageCode,
-                                                  ),
-                                                  'data',
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .headlineSmall
-                                                    .override(
-                                                      fontFamily: 'Inter Tight',
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        const AlignmentDirectional(
+                                                            1.0, 0.0),
+                                                    child: Icon(
+                                                      Icons.calendar_month,
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
                                                               .primaryText,
-                                                      letterSpacing: 0.0,
+                                                      size: 24.0,
                                                     ),
+                                                  ),
+                                                  Text(
+                                                    valueOrDefault<String>(
+                                                      dateTimeFormat(
+                                                        "d/M/y",
+                                                        getCurrentTimestamp,
+                                                        locale:
+                                                            FFLocalizations.of(
+                                                                    context)
+                                                                .languageCode,
+                                                      ),
+                                                      'data',
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .headlineSmall
+                                                        .override(
+                                                          fontFamily:
+                                                              'Inter Tight',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          letterSpacing: 0.0,
+                                                        ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -650,7 +668,9 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if (_model.searchActive == '1')
+                                      if ((_model.searchActive == '1') &&
+                                          (_model.searchText == null ||
+                                              _model.searchText == ''))
                                         FutureBuilder<List<GetAllOSsRow>>(
                                           future: SQLiteManager.instance
                                               .getAllOSs(),
@@ -729,10 +749,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                           ),
                                                           'cliente':
                                                               serializeParam(
-                                                            listViewALLGetAllOSsRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                            0,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -944,7 +962,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                       valueOrDefault<
                                                                           String>(
                                                                         listViewALLGetAllOSsRow
-                                                                            .osConteudo,
+                                                                            .osMotivoDescricao,
                                                                         'Título',
                                                                       ).maybeHandleOverflow(
                                                                         maxChars:
@@ -997,13 +1015,7 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                             0.0,
                                                                             0.0),
                                                                     child: Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        listViewALLGetAllOSsRow
-                                                                            .clienteId
-                                                                            ?.toString(),
-                                                                        'Nome Cliente',
-                                                                      ),
+                                                                      '',
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyMedium
@@ -1083,7 +1095,10 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 children: [
                                                                   FFButtonWidget(
                                                                     onPressed:
-                                                                        () async {},
+                                                                        () {
+                                                                      print(
+                                                                          'Button pressed ...');
+                                                                    },
                                                                     text:
                                                                         'Ver Detalhes',
                                                                     options:
@@ -1279,9 +1294,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewStatusOrdemServicoRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .clienteId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -1865,9 +1879,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewSearchOSSemStatusOrdemServicoRow
-                                                                .tipoOsId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .tipoOsId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -2456,9 +2469,8 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewStatusSearchOSOrdemServicoRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .clienteId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(

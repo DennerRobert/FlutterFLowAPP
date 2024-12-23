@@ -52,56 +52,51 @@ class _AuditoriaTecOnOffWidgetState extends State<AuditoriaTecOnOffWidget> {
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         body: SafeArea(
           top: true,
-          child: FutureBuilder<List<GetAllOSsRow>>(
-            future: SQLiteManager.instance.getAllOSs(),
-            builder: (context, snapshot) {
-              // Customize what your widget looks like when it's loading.
-              if (!snapshot.hasData) {
-                return Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
+          child: Container(
+            width: 431.0,
+            height: 850.0,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).secondaryBackground,
+            ),
+            child: FutureBuilder<List<GetUsuarioRow>>(
+              future: SQLiteManager.instance.getUsuario(),
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      height: 50.0,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          FlutterFlowTheme.of(context).primary,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }
-              final containerGetAllOSsRowList = snapshot.data!;
+                  );
+                }
+                final columnGetUsuarioRowList = snapshot.data!;
 
-              return Container(
-                width: 431.0,
-                height: 850.0,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: Builder(
-                  builder: (context) {
-                    final qeqweqwe = containerGetAllOSsRowList.toList();
-
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: List.generate(qeqweqwe.length, (qeqweqweIndex) {
-                        final qeqweqweItem = qeqweqwe[qeqweqweIndex];
-                        return Text(
-                          valueOrDefault<String>(
-                            qeqweqweItem.osMotivoDescricao,
-                            'aa',
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: List.generate(columnGetUsuarioRowList.length,
+                      (columnIndex) {
+                    final columnGetUsuarioRow =
+                        columnGetUsuarioRowList[columnIndex];
+                    return Text(
+                      valueOrDefault<String>(
+                        columnGetUsuarioRow.nome,
+                        'aaaaa',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
                           ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
-                        );
-                      }),
                     );
-                  },
-                ),
-              );
-            },
+                  }),
+                );
+              },
+            ),
           ),
         ),
       ),

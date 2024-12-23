@@ -61,6 +61,10 @@ class SQLiteManager {
         id: id,
       );
 
+  Future<List<GetUsuarioRow>> getUsuario() => performGetUsuario(
+        _database,
+      );
+
   /// END READ QUERY CALLS
 
   /// START UPDATE QUERY CALLS
@@ -104,7 +108,7 @@ class SQLiteManager {
     String? osobservacao,
     String? enderecobairro,
     String? enderecologradouro,
-    String? clienteid,
+    int? clienteid,
   }) =>
       performUpdateOS(
         _database,
@@ -124,6 +128,10 @@ class SQLiteManager {
       );
 
   Future limpabancoOS() => performLimpabancoOS(
+        _database,
+      );
+
+  Future updateUsuario() => performUpdateUsuario(
         _database,
       );
 

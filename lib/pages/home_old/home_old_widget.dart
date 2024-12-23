@@ -630,9 +630,8 @@ class _HomeOldWidgetState extends State<HomeOldWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewALLOrdemServicoRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .clienteId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -1045,8 +1044,8 @@ class _HomeOldWidgetState extends State<HomeOldWidget> {
                                                                           ),
                                                                           'cliente':
                                                                               serializeParam(
-                                                                            '',
-                                                                            ParamType.String,
+                                                                            0,
+                                                                            ParamType.int,
                                                                           ),
                                                                           'status':
                                                                               serializeParam(
@@ -1254,9 +1253,8 @@ class _HomeOldWidgetState extends State<HomeOldWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewStatusOrdemServicoRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .clienteId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -1840,9 +1838,8 @@ class _HomeOldWidgetState extends State<HomeOldWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewSearchOSSemStatusOrdemServicoRow
-                                                                .tipoOsId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .tipoOsId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(
@@ -2431,9 +2428,8 @@ class _HomeOldWidgetState extends State<HomeOldWidget> {
                                                           'cliente':
                                                               serializeParam(
                                                             listViewStatusSearchOSOrdemServicoRow
-                                                                .clienteId
-                                                                ?.toString(),
-                                                            ParamType.String,
+                                                                .clienteId,
+                                                            ParamType.int,
                                                           ),
                                                           'status':
                                                               serializeParam(

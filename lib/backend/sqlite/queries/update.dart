@@ -55,7 +55,7 @@ Future performUpdateOS(
   String? osobservacao,
   String? enderecobairro,
   String? enderecologradouro,
-  String? clienteid,
+  int? clienteid,
 }) {
   final query = '''
 INSERT  INTO ordem_servico (
@@ -127,3 +127,26 @@ DELETE FROM ordem_servico;
 }
 
 /// END LIMPABANCOOS
+
+/// BEGIN UPDATEUSUARIO
+Future performUpdateUsuario(
+  Database database,
+) {
+  const query = '''
+INSERT  INTO usuario (
+    sgp_id,
+    nome,
+    funcao,
+    url_foto,
+    ) VALUES (
+    1,
+    'fulano',
+    'fulano',
+    'fulano',
+);
+
+''';
+  return database.rawQuery(query);
+}
+
+/// END UPDATEUSUARIO

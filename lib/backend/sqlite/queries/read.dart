@@ -60,7 +60,8 @@ Future<List<GetAllOSsRow>> performGetAllOSs(
   Database database,
 ) {
   const query = '''
-SELECT * FROM ordem_servico;
+SELECT *
+FROM ordem_servico;
 ''';
   return _readQuery(database, query, (d) => GetAllOSsRow(d));
 }
@@ -129,3 +130,27 @@ class GetAllOSsCopyRow extends SqliteRow {
 }
 
 /// END GETALLOSSCOPY
+
+/// BEGIN GETUSUARIO
+Future<List<GetUsuarioRow>> performGetUsuario(
+  Database database,
+) {
+  const query = '''
+Select * from usuario;
+''';
+  return _readQuery(database, query, (d) => GetUsuarioRow(d));
+}
+
+class GetUsuarioRow extends SqliteRow {
+  GetUsuarioRow(super.data);
+
+  int get id => data['id'] as int;
+  int? get sgpId => data['sgp_id'] as int?;
+  bool? get ativo => data['ativo'] as bool?;
+  String? get nome => data['nome'] as String?;
+  String? get funcao => data['funcao'] as String?;
+  String? get urlFoto => data['url_foto'] as String?;
+  int? get userId => data['user_id'] as int?;
+}
+
+/// END GETUSUARIO

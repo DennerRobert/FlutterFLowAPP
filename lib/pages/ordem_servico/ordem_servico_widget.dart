@@ -21,7 +21,7 @@ class OrdemServicoWidget extends StatefulWidget {
   final int? idordem;
   final String? nome;
   final String? endereco;
-  final String? cliente;
+  final int? cliente;
   final String? status;
   final String conteudo;
   final int? idSelecionado;
@@ -142,7 +142,7 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                                       Text(
                                         valueOrDefault<String>(
                                           widget.idordem?.toString(),
-                                          'ID da OS',
+                                          'ID Ordem de Serviço',
                                         ),
                                         style: FlutterFlowTheme.of(context)
                                             .headlineSmall
@@ -301,10 +301,7 @@ class _OrdemServicoWidgetState extends State<OrdemServicoWidget> {
                                   ].divide(const SizedBox(width: 8.0)),
                                 ),
                                 Text(
-                                  valueOrDefault<String>(
-                                    widget.cliente,
-                                    'Nome_cliente',
-                                  ),
+                                  'Indústrias TechCool Ltda.',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(

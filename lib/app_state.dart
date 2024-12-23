@@ -81,6 +81,18 @@ class FFAppState extends ChangeNotifier {
               .toList() ??
           _ListOSDataType;
     });
+    _safeInit(() {
+      _ListaDadosUsuario =
+          prefs.getStringList('ff_ListaDadosUsuario')?.map((x) {
+                try {
+                  return jsonDecode(x);
+                } catch (e) {
+                  print("Can't decode persisted json. Error: $e.");
+                  return {};
+                }
+              }).toList() ??
+              _ListaDadosUsuario;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -308,6 +320,47 @@ class FFAppState extends ChangeNotifier {
     ListOSDataType.insert(index, value);
     prefs.setStringList('ff_ListOSDataType',
         _ListOSDataType.map((x) => x.serialize()).toList());
+  }
+
+  List<dynamic> _ListaDadosUsuario = [];
+  List<dynamic> get ListaDadosUsuario => _ListaDadosUsuario;
+  set ListaDadosUsuario(List<dynamic> value) {
+    _ListaDadosUsuario = value;
+    prefs.setStringList(
+        'ff_ListaDadosUsuario', value.map((x) => jsonEncode(x)).toList());
+  }
+
+  void addToListaDadosUsuario(dynamic value) {
+    ListaDadosUsuario.add(value);
+    prefs.setStringList('ff_ListaDadosUsuario',
+        _ListaDadosUsuario.map((x) => jsonEncode(x)).toList());
+  }
+
+  void removeFromListaDadosUsuario(dynamic value) {
+    ListaDadosUsuario.remove(value);
+    prefs.setStringList('ff_ListaDadosUsuario',
+        _ListaDadosUsuario.map((x) => jsonEncode(x)).toList());
+  }
+
+  void removeAtIndexFromListaDadosUsuario(int index) {
+    ListaDadosUsuario.removeAt(index);
+    prefs.setStringList('ff_ListaDadosUsuario',
+        _ListaDadosUsuario.map((x) => jsonEncode(x)).toList());
+  }
+
+  void updateListaDadosUsuarioAtIndex(
+    int index,
+    dynamic Function(dynamic) updateFn,
+  ) {
+    ListaDadosUsuario[index] = updateFn(_ListaDadosUsuario[index]);
+    prefs.setStringList('ff_ListaDadosUsuario',
+        _ListaDadosUsuario.map((x) => jsonEncode(x)).toList());
+  }
+
+  void insertAtIndexInListaDadosUsuario(int index, dynamic value) {
+    ListaDadosUsuario.insert(index, value);
+    prefs.setStringList('ff_ListaDadosUsuario',
+        _ListaDadosUsuario.map((x) => jsonEncode(x)).toList());
   }
 }
 
