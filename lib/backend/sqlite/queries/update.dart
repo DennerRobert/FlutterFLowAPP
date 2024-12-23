@@ -130,19 +130,27 @@ DELETE FROM ordem_servico;
 
 /// BEGIN UPDATEUSUARIO
 Future performUpdateUsuario(
-  Database database,
-) {
-  const query = '''
+  Database database, {
+  String? sgpid,
+  String? nome,
+  String? funcao,
+  String? urlfoto,
+  int? userid,
+}) {
+  final query = '''
 INSERT  INTO usuario (
     sgp_id,
     nome,
     funcao,
     url_foto,
+    user_id,
     ) VALUES (
     1,
-    'fulano',
-    'fulano',
-    'fulano',
+    '$sgpid',
+    '$nome',
+    '$funcao',
+    '$urlfoto',
+    '$userid',
 );
 
 ''';

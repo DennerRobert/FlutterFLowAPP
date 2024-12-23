@@ -145,7 +145,38 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                   safeSetState(() {});
                   while (_model.contadorUser <
                       FFAppState().ListaDadosUsuario.length) {
-                    await SQLiteManager.instance.updateUsuario();
+                    await SQLiteManager.instance.updateUsuario(
+                      sgpid: getJsonField(
+                        FFAppState()
+                            .ListaDadosUsuario
+                            .elementAtOrNull(_model.contadorUser),
+                        r'''$['sgp_id']''',
+                      ).toString().toString(),
+                      nome: getJsonField(
+                        FFAppState()
+                            .ListaDadosUsuario
+                            .elementAtOrNull(_model.contadorUser),
+                        r'''$['nome']''',
+                      ).toString().toString(),
+                      funcao: getJsonField(
+                        FFAppState()
+                            .ListaDadosUsuario
+                            .elementAtOrNull(_model.contadorUser),
+                        r'''$['funcao']''',
+                      ).toString().toString(),
+                      urlfoto: getJsonField(
+                        FFAppState()
+                            .ListaDadosUsuario
+                            .elementAtOrNull(_model.contadorUser),
+                        r'''$['url_foto']''',
+                      ).toString().toString(),
+                      userid: getJsonField(
+                        FFAppState()
+                            .ListaDadosUsuario
+                            .elementAtOrNull(_model.contadorUser),
+                        r'''$['user_id']''',
+                      ),
+                    );
                   }
                 }
               } else {
@@ -204,96 +235,131 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                 children: [
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
-                    child: Material(
-                      color: Colors.transparent,
-                      elevation: 10.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                    child: FutureBuilder<List<GetUsuarioRow>>(
+                      future: SQLiteManager.instance.getUsuario(
+                        id: _model.idUser!,
                       ),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 0.9,
-                        height: MediaQuery.sizeOf(context).height * 0.1,
-                        decoration: BoxDecoration(
-                          color: const Color(0x2BFFFFFF),
-                          borderRadius: BorderRadius.circular(10.0),
-                          border: Border.all(
-                            color: FlutterFlowTheme.of(context).alternate,
-                            width: 2.0,
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        final dadosPessoaisGetUsuarioRowList = snapshot.data!;
+
+                        return Material(
+                          color: Colors.transparent,
+                          elevation: 10.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                        ),
-                        child: Align(
-                          alignment: const AlignmentDirectional(0.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    15.0, 0.0, 15.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width * 0.9,
+                            height: MediaQuery.sizeOf(context).height * 0.1,
+                            decoration: BoxDecoration(
+                              color: const Color(0x2BFFFFFF),
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                width: 2.0,
+                              ),
+                            ),
+                            child: Align(
+                              alignment: const AlignmentDirectional(0.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                        15.0, 0.0, 15.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Material(
-                                          color: Colors.transparent,
-                                          elevation: 4.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
-                                          ),
-                                          child: Container(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              child: Image.network(
-                                                'https://images.unsplash.com/photo-1425421669292-0c3da3b8f529?w=500&h=500',
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Material(
+                                              color: Colors.transparent,
+                                              elevation: 4.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                              ),
+                                              child: Container(
                                                 width: 60.0,
                                                 height: 60.0,
-                                                fit: BoxFit.cover,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
+                                                  child: Image.network(
+                                                    'https://images.unsplash.com/photo-1425421669292-0c3da3b8f529?w=500&h=500',
+                                                    width: 60.0,
+                                                    height: 60.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .headlineSmall
-                                                  .override(
-                                                    fontFamily: 'Inter Tight',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .alternate,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
+                                            Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  valueOrDefault<String>(
+                                                    dadosPessoaisGetUsuarioRowList
+                                                        .firstOrNull?.nome,
+                                                    'Nome',
                                                   ),
-                                            ),
-                                            Text(
-                                              '',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .headlineSmall
+                                                      .override(
+                                                        fontFamily:
+                                                            'Inter Tight',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .alternate,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  valueOrDefault<String>(
+                                                    dadosPessoaisGetUsuarioRowList
+                                                        .firstOrNull?.funcao,
+                                                    'Cargo',
+                                                  ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
                                                       .bodyMedium
                                                       .override(
                                                         fontFamily: 'Inter',
@@ -303,33 +369,35 @@ class _HomeListOsWidgetState extends State<HomeListOsWidget> {
                                                                 .alternate,
                                                         letterSpacing: 0.0,
                                                       ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ].divide(const SizedBox(width: 16.0)),
+                                        ),
+                                        FlutterFlowIconButton(
+                                          borderColor: Colors.transparent,
+                                          borderRadius: 20.0,
+                                          buttonSize: 40.0,
+                                          fillColor: const Color(0x33FFFFFF),
+                                          icon: Icon(
+                                            Icons.notifications_none,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            size: 24.0,
+                                          ),
+                                          onPressed: () {
+                                            print('IconButton pressed ...');
+                                          },
                                         ),
                                       ].divide(const SizedBox(width: 16.0)),
                                     ),
-                                    FlutterFlowIconButton(
-                                      borderColor: Colors.transparent,
-                                      borderRadius: 20.0,
-                                      buttonSize: 40.0,
-                                      fillColor: const Color(0x33FFFFFF),
-                                      icon: Icon(
-                                        Icons.notifications_none,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        size: 24.0,
-                                      ),
-                                      onPressed: () {
-                                        print('IconButton pressed ...');
-                                      },
-                                    ),
-                                  ].divide(const SizedBox(width: 16.0)),
-                                ),
+                                  ),
+                                ].divide(const SizedBox(height: 16.0)),
                               ),
-                            ].divide(const SizedBox(height: 16.0)),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                   Padding(

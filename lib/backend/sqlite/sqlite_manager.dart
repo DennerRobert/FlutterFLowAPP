@@ -61,8 +61,12 @@ class SQLiteManager {
         id: id,
       );
 
-  Future<List<GetUsuarioRow>> getUsuario() => performGetUsuario(
+  Future<List<GetUsuarioRow>> getUsuario({
+    int? id,
+  }) =>
+      performGetUsuario(
         _database,
+        id: id,
       );
 
   /// END READ QUERY CALLS
@@ -131,8 +135,20 @@ class SQLiteManager {
         _database,
       );
 
-  Future updateUsuario() => performUpdateUsuario(
+  Future updateUsuario({
+    String? sgpid,
+    String? nome,
+    String? funcao,
+    String? urlfoto,
+    int? userid,
+  }) =>
+      performUpdateUsuario(
         _database,
+        sgpid: sgpid,
+        nome: nome,
+        funcao: funcao,
+        urlfoto: urlfoto,
+        userid: userid,
       );
 
   /// END UPDATE QUERY CALLS

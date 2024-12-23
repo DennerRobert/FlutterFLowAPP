@@ -133,10 +133,11 @@ class GetAllOSsCopyRow extends SqliteRow {
 
 /// BEGIN GETUSUARIO
 Future<List<GetUsuarioRow>> performGetUsuario(
-  Database database,
-) {
-  const query = '''
-Select * from usuario;
+  Database database, {
+  int? id,
+}) {
+  final query = '''
+Select * from usuario where id=$id;
 ''';
   return _readQuery(database, query, (d) => GetUsuarioRow(d));
 }
