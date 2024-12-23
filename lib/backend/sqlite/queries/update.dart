@@ -138,19 +138,18 @@ Future performUpdateUsuario(
   int? userid,
 }) {
   final query = '''
-INSERT  INTO usuario (
+INSERT INTO usuario (
     sgp_id,
     nome,
     funcao,
     url_foto,
-    user_id,
-    ) VALUES (
-    1,
+    user_id
+) VALUES (
     '$sgpid',
     '$nome',
     '$funcao',
     '$urlfoto',
-    '$userid',
+    '$userid'
 );
 
 ''';
